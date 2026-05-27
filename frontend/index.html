@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA: Cinematic AI OS</title>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <div class="glass-container">
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="logo-text">AURA</h1>
+        <div class="header-titles">
+          <span class="subtitle-1">AUTONOMOUS DESKTOP COMPANION</span>
+          <span class="subtitle-2">AURA: Cinematic AI OS</span>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="nav-pills">
+          <button class="nav-pill active">Home</button>
+          <button class="nav-pill" id="memoryToggleBtn">Memory Vault</button>
+          <button class="nav-pill" id="settingsToggleBtn">Settings</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div id="connectionStatus" class="connection-status status-disconnected">
+          <span class="status-dot"></span> <span class="status-text">Disconnected</span>
+        </div>
+        <button id="connectBtn" class="primary-btn">Connect</button>
+        <button id="disconnectBtn" class="primary-btn" style="display: none;">Disconnect</button>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <!-- Left Column: Dashboard -->
+      <div class="dashboard-panel">
+        <h2>Companion Dashboard</h2>
+        <p class="dashboard-desc">Realtime voice, camera, screen understanding, and contextual assistance.</p>
+        
+        <div class="mode-tabs">
+          <button class="mode-tab active">Live</button>
+          <button class="mode-tab">Proactive</button>
+          <button class="mode-tab">Synced</button>
+        </div>
+        
+        <div class="orb-container">
+          <div class="orb"></div>
+          <p class="orb-text">Realtime companion mode</p>
+          <video id="videoPreview" autoplay playsinline muted hidden></video>
+        </div>
+        
+        <div class="action-buttons">
+          <button id="startAudioBtn" class="action-btn">Mic</button>
+          <button id="startVideoBtn" class="action-btn">Camera</button>
+          <button id="startScreenBtn" class="action-btn">Screen</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Chat -->
+      <div class="chat-panel">
+        <div id="chatContainer">
+          <div class="system-message chat-message">AURA is ready. Connect to begin.</div>
+        </div>
+        
+        <div class="chat-input-area">
+          <input type="text" id="chatInput" placeholder="Talk to AURA..." autocomplete="off" />
+          <button id="sendBtn" class="send-btn">Send</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Hidden Settings Panel (to keep JS working without errors) -->
+  <div id="settingsPanel" class="settings-modal" style="display: none;">
+    <div class="settings-content">
+      <div class="settings-header">
+        <h3>Settings</h3>
+        <button id="closeSettingsBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="settings-body">
+        <label>Model ID <input type="text" id="model" value="gemini-3.1-flash-live-preview" /></label>
+        <label>System Instructions <textarea id="systemInstructions" rows="4">You are AURA, an autonomous desktop companion. Be concise, helpful, and friendly. You have persistent memory! If the user asks what they were doing previously, use the search_persistent_memory tool to recall past context, screen sharing data, or conversations.</textarea></label>
+        <label>Voice 
+          <select id="voiceSelect">
+            <option value="Puck">Puck (Default)</option>
+            <option value="Charon">Charon</option>
+            <option value="Kore">Kore</option>
+            <option value="Fenrir">Fenrir</option>
+            <option value="Aoede">Aoede</option>
+          </select>
+        </label>
+        <label>Temperature <span id="temperatureValue">1.0</span>
+          <input type="range" id="temperature" min="0.1" max="2.0" step="0.1" value="1.0" />
+        </label>
+        <label><input type="checkbox" id="enableGrounding" /> Google Search Grounding</label>
+        <label><input type="checkbox" id="enableAlertTool" checked /> Show Alert Box</label>
+        <label><input type="checkbox" id="enableCssStyleTool" checked /> Inject CSS Style</label>
+        <label>Silence Duration (ms) <input type="number" id="silenceDuration" value="2000" min="500" max="10000" step="100" /></label>
+        <label>Prefix Padding (ms) <input type="number" id="prefixPadding" value="500" min="0" max="2000" step="100" /></label>
+        <label>End Sensitivity
+          <select id="endSpeechSensitivity">
+            <option value="END_SENSITIVITY_UNSPECIFIED" selected>Default</option>
+            <option value="END_SENSITIVITY_HIGH">High</option>
+            <option value="END_SENSITIVITY_LOW">Low</option>
+          </select>
+        </label>
+        <label>Start Sensitivity
+          <select id="startSpeechSensitivity">
+            <option value="START_SENSITIVITY_UNSPECIFIED" selected>Default</option>
+            <option value="START_SENSITIVITY_HIGH">High</option>
+            <option value="START_SENSITIVITY_LOW">Low</option>
+          </select>
+        </label>
+        <label>Activity Handling
+          <select id="activityHandling">
+            <option value="ACTIVITY_HANDLING_UNSPECIFIED" selected>Default</option>
+            <option value="START_OF_ACTIVITY_INTERRUPTS">Always Interrupt</option>
+            <option value="NO_INTERRUPTION">No Interruption</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="enableInputTranscription" checked /> Input Transcription</label>
+        <label><input type="checkbox" id="enableOutputTranscription" checked /> Output Transcription</label>
+        <label><input type="checkbox" id="disableActivityDetection" /> Manual Mode (No VAD)</label>
+        <label>Microphone Input <select id="micSelect"><option value="">Default Microphone</option></select></label>
+        <label>Camera / Video <select id="cameraSelect"><option value="">Default Camera</option></select></label>
+        <label>Output Volume <span id="volumeValue">80%</span>
+          <input type="range" id="volume" min="0" max="100" value="80" />
+        </label>
+        <details>
+          <summary>System Debug Info</summary>
+          <pre id="debugInfo" style="font-size: 0.75rem;">Ready to connect...</pre>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Memory Vault Modal -->
+  <div id="memoryPanel" class="settings-modal" style="display: none;">
+    <div class="memory-content glass-card">
+      <div class="settings-header">
+        <h3><span class="holo-text">AURA</span> Persistent Memory</h3>
+        <button id="closeMemoryBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="memory-body">
+        <div class="memory-search-bar">
+          <input type="text" id="memorySearchInput" placeholder="Search episodic memory (e.g. 'What was I coding yesterday?')" />
+          <button id="memorySearchBtn" class="primary-btn">Semantic Search</button>
+        </div>
+        
+        <div class="memory-visualization">
+          <div class="neural-network-bg"></div>
+          <div class="timeline-container" id="memoryTimeline">
+            <div class="memory-card">
+              <div class="memory-type-badge type-system">System</div>
+              <div class="memory-time">Now</div>
+              <div class="memory-text">AURA Memory Engine Initialized. Waiting for queries...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="geminilive.js"></script>
+  <script src="mediaUtils.js"></script>
+  <script src="tools.js"></script>
+  <script src="script.js?v=3"></script>
+  <script>
+    document.getElementById('settingsToggleBtn').addEventListener('click', () => {
+      document.getElementById('settingsPanel').style.display = 'flex';
+    });
+    document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+      document.getElementById('settingsPanel').style.display = 'none';
+    });
+    
+    document.getElementById('memoryToggleBtn').addEventListener('click', () => {
+      document.getElementById('memoryPanel').style.display = 'flex';
+    });
+    document.getElementById('closeMemoryBtn').addEventListener('click', () => {
+      document.getElementById('memoryPanel').style.display = 'none';
+    });
+    
+    // Memory Search Logic
+    document.getElementById('memorySearchBtn').addEventListener('click', async () => {
+      const query = document.getElementById('memorySearchInput').value;
+      if (!query) return;
+      
+      const timeline = document.getElementById('memoryTimeline');
+      timeline.innerHTML = '<div class="memory-card"><div class="memory-text">Searching neural pathways...</div></div>';
+      
+      try {
+        const res = await fetch('/api/memory/search', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({query: query, top_k: 5})
+        });
+        const data = await res.json();
+        
+        if (data.error) {
+           timeline.innerHTML = `<div class="memory-card"><div class="memory-text">Error: ${data.error}</div></div>`;
+           return;
+        }
+        
+        timeline.innerHTML = '';
+        if (data.memories && data.memories.length > 0) {
+           data.memories.forEach(mem => {
+              const card = document.createElement('div');
+              card.className = 'memory-card episodic-card';
+              
+              const date = new Date(mem.timestamp).toLocaleString();
+              card.innerHTML = `
+                <div class="memory-type-badge type-${mem.memory_type}">${mem.memory_type.toUpperCase()}</div>
+                <div class="memory-time">${date} | Score: ${(mem.score * 100).toFixed(1)}%</div>
+                <div class="memory-text">${mem.content}</div>
+                ${mem.application ? `<div class="memory-context-tag">App: ${mem.application}</div>` : ''}
+              `;
+              timeline.appendChild(card);
+           });
+        } else {
+           timeline.innerHTML = '<div class="memory-card"><div class="memory-text">No relevant memories found.</div></div>';
+        }
+      } catch (e) {
+        timeline.innerHTML = '<div class="memory-card"><div class="memory-text">Connection to Memory Core failed.</div></div>';
+      }
+    });
+    
+    // Override connection status text update to keep just "Disconnected" or "Connected"  
+    // and keep the dot style.
+    const originalStatusUpdate = document.getElementById('connectionStatus');
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          const text = originalStatusUpdate.textContent.trim();
+          if (text === 'Disconnected' || text === 'Connected') {
+             if (!originalStatusUpdate.querySelector('.status-dot')) {
+                const statusDot = document.createElement('span');
+                statusDot.className = 'status-dot';
+                const statusText = document.createElement('span');
+                statusText.className = 'status-text';
+                statusText.textContent = text;
+                originalStatusUpdate.innerHTML = '';
+                originalStatusUpdate.appendChild(statusDot);
+                originalStatusUpdate.appendChild(statusText);
+             }
+          }
+        }
+      });
+    });
+    observer.observe(originalStatusUpdate, { childList: true });
+  </script>
+</body>
+</html>

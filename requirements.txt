@@ -1,0 +1,11 @@
+aiohttp>=3.8.0
+google-genai
+python-dotenv
+fastapi
+uvicorn
+pinecone-client
+langchain
+langchain-google-genai
+langchain-pinecone
+langgraph
+pydantic
