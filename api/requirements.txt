@@ -3,6 +3,6 @@ google-genai
 python-dotenv
 fastapi
 uvicorn
-pinecone-client
+pinecone
 pydantic
 aiofiles
