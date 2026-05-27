@@ -19,10 +19,7 @@ A high-performance, premium WebSocket client for Google's Gemini Live API. This 
    uv pip install -r requirements.txt
    ```
 
-2. **Configure API Key**
-   Edit the `.env` file and add your `GEMINI_API_KEY`:
-   ```env
-   GEMINI_API_KEY=your_actual_api_key_here
+2. **C
    ```
 
 3. **Start Server**
@@ -49,12 +46,3 @@ A high-performance, premium WebSocket client for Google's Gemini Live API. This 
     └── script.js     # Application workflow
 ```
 
-## 🔒 Security & Architecture
-
-This demo uses the **Ephemeral Token** approach:
-
-1.  **Backend**: Uses `GEMINI_API_KEY` to request a short-lived (ephemeral) token via the `google-genai` SDK.
-2.  **Frontend**: Fetches this token from the backend `/api/token` endpoint.
-3.  **Direct Connection**: The browser establishes a WebSocket connection directly to Gemini API using the token, ensuring maximum performance and privacy.
-
-monaco editor - https://github.com/monaco-editor/monaco-editor   ----    https://microsoft.github.io/monaco-editor/     used here for code editor
