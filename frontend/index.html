@@ -86,6 +86,7 @@
       </div>
       <div class="settings-body">
         <label>Model ID <input type="text" id="model" value="gemini-3.1-flash-live-preview" /></label>
+        <label>Backend API URL <input type="text" id="backendUrl" value="https://aura-jet-eight.vercel.app" placeholder="e.g. http://localhost:8000" /></label>
         <label>System Instructions <textarea id="systemInstructions" rows="4">You are AURA, an autonomous desktop companion. Be concise, helpful, and friendly. You have persistent memory! If the user asks what they were doing previously, use the search_persistent_memory tool to recall past context, screen sharing data, or conversations.</textarea></label>
         <label>Voice 
           <select id="voiceSelect">
@@ -170,8 +171,8 @@
 
   <script src="geminilive.js"></script>
   <script src="mediaUtils.js"></script>
-  <script src="tools.js"></script>
-  <script src="script.js?v=3"></script>
+  <script src="tools.js?v=2"></script>
+  <script src="script.js?v=4"></script>
   <script>
     document.getElementById('settingsToggleBtn').addEventListener('click', () => {
       document.getElementById('settingsPanel').style.display = 'flex';
@@ -196,7 +197,8 @@
       timeline.innerHTML = '<div class="memory-card"><div class="memory-text">Searching neural pathways...</div></div>';
       
       try {
-        const res = await fetch('/api/memory/search', {
+        const backendUrl = document.getElementById('backendUrl').value.replace(/\/$/, "");
+        const res = await fetch(`${backendUrl}/api/memory/search`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({query: query, top_k: 5})
