@@ -1,10 +1,31 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse, FileResponse
 import traceback
 import sys
 import os
 
-app = FastAPI(title="Gemini Live API Server")
+try:
+    from fastapi import FastAPI, Request, HTTPException
+    from fastapi.responses import JSONResponse, FileResponse
+    app = FastAPI(title="Gemini Live API Server")
+except Exception as fallback_error:
+    error_trace = traceback.format_exc()
+    print(f"FATAL IMPORT ERROR:\n{error_trace}")
+    
+    async def app(scope, receive, send):
+        if scope['type'] == 'http':
+            import json
+            await send({
+                'type': 'http.response.start',
+                'status': 500,
+                'headers': [(b'content-type', b'application/json')],
+            })
+            await send({
+                'type': 'http.response.body',
+                'body': json.dumps({
+                    "error": "Failed to import FastAPI or dependencies",
+                    "details": str(fallback_error),
+                    "traceback": error_trace.split("\n")
+                }).encode('utf-8'),
+            })
 
 try:
     from fastapi.staticfiles import StaticFiles
@@ -156,3 +177,4 @@ except Exception as fatal_error:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("api.index:app", host="0.0.0.0", port=8000)
+
