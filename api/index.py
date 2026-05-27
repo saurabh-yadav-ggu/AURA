@@ -27,6 +27,7 @@ try:
     except Exception as e:
         print(f"Memory Engine failed to load: {e}")
         HAS_MEMORY = False
+        MEMORY_ERROR = str(e)
 
     load_dotenv()
 
@@ -84,7 +85,7 @@ try:
     async def search_memory_api(request: Request):
         """API endpoint to search the AURA persistent memory"""
         if not HAS_MEMORY:
-            return JSONResponse(status_code=503, content={"error": "Memory engine disabled"})
+            return JSONResponse(status_code=503, content={"error": f"Memory engine disabled: {MEMORY_ERROR}"})
             
         try:
             data = await request.json()
@@ -102,7 +103,7 @@ try:
     async def store_memory_api(request: Request):
         """API endpoint to store data into AURA persistent memory"""
         if not HAS_MEMORY:
-            return JSONResponse(status_code=503, content={"error": "Memory engine disabled"})
+            return JSONResponse(status_code=503, content={"error": f"Memory engine disabled: {MEMORY_ERROR}"})
             
         try:
             data = await request.json()
@@ -157,4 +158,6 @@ except Exception as fatal_error:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("api.index:app", host="0.0.0.0", port=8000)
+
+
 
