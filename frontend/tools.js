@@ -136,7 +136,8 @@ class SearchMemoryTool extends FunctionCallDefinition {
     console.log(`🧠 Searching memory for: "${query}" (Type: ${filter_type || 'all'})`);
 
     try {
-      const response = await fetch('/api/memory/search', {
+      const backendUrl = window.elements && window.elements.backendUrl ? window.elements.backendUrl.value.replace(/\/$/, "") : "";
+      const response = await fetch(`${backendUrl}/api/memory/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

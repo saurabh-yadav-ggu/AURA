@@ -18,6 +18,7 @@ const elements = {};
 function initDOM() {
   const ids = [
     "model",
+    "backendUrl",
     "systemInstructions",
     "enableInputTranscription",
     "enableOutputTranscription",
@@ -116,9 +117,12 @@ function updateStatus(elementId, text, statusClass = "") {
 async function connect() {
   try {
     updateStatus("connectionStatus", "Fetching ephemeral token...");
+    
+    // Get backend URL (remove trailing slash if any)
+    const backendUrl = elements.backendUrl.value.replace(/\/$/, "");
 
     // Fetch token from backend
-    const response = await fetch("/api/token", { method: "POST" });
+    const response = await fetch(`${backendUrl}/api/token`, { method: "POST" });
     if (!response.ok) {
       throw new Error(`Failed to fetch token: ${response.statusText}`);
     }
@@ -544,7 +548,8 @@ function storeCurrentTurn() {
          app_name: state.screen.isSharing ? "Screen Share Active" : "General"
      };
      
-     fetch('/api/memory/store', {
+     const backendUrl = elements.backendUrl ? elements.backendUrl.value.replace(/\/$/, "") : "";
+     fetch(`${backendUrl}/api/memory/store`, {
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
        body: JSON.stringify(memoryData)
