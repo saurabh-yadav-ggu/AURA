@@ -87,7 +87,7 @@
       <div class="settings-body">
         <label>Model ID <input type="text" id="model" value="gemini-3.1-flash-live-preview" /></label>
         <label>Backend API URL <input type="text" id="backendUrl" value="https://aura-jet-eight.vercel.app" placeholder="e.g. http://localhost:8000" /></label>
-        <label>System Instructions <textarea id="systemInstructions" rows="4">You are AURA, an autonomous desktop companion. Be concise, helpful, and friendly. You have persistent memory! If the user asks what they were doing previously, use the search_persistent_memory tool to recall past context, screen sharing data, or conversations.</textarea></label>
+        <label>System Instructions <textarea id="systemInstructions" rows="4">You are AURA, an advanced AI voice assistant with a persistent memory core. CRITICAL RULE: If the user asks ANY question about the past, past conversations, preferences (like their favorite color), or tasks, you MUST immediately call the search_persistent_memory tool. Do not guess. You must use the tool every single time they ask about previous context.</textarea></label>
         <label>Voice 
           <select id="voiceSelect">
             <option value="Puck">Puck (Default)</option>
@@ -259,3 +259,4 @@
   </script>
 </body>
 </html>
+
