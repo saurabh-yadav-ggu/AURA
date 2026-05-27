@@ -133,9 +133,12 @@ async def store_memory_api(request: Request):
 
 # Vercel needs a top-level mapping for static files (in production, Vercel edge routes this via vercel.json)
 # But for local dev and fallback, we mount the frontend folder directly.
-frontend_dir = os.path.join(os.path.dirname(__file__), "frontend")
+frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
 if os.path.exists(frontend_dir):
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="static")
+    try:
+        app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="static")
+    except Exception as e:
+        print(f"Error mounting static files: {e}")
 
 if __name__ == "__main__":
     import uvicorn
