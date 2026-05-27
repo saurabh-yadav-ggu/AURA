@@ -20,7 +20,7 @@ try:
 
     # Try importing memory engine (lazy init)
     try:
-        from memory_engine import AURAMemoryEngine
+        from lib.memory_engine import AURAMemoryEngine
         memory_engine = AURAMemoryEngine()
         HAS_MEMORY = True
     except Exception as e:
@@ -155,4 +155,4 @@ except Exception as fatal_error:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000)
+    uvicorn.run("api.index:app", host="0.0.0.0", port=8000)
