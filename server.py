@@ -39,14 +39,25 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
     print("⚠️ Warning: GEMINI_API_KEY not found in environment.")
-    client = genai.Client(http_options={"api_version": "v1alpha"})
+    try:
+        client = genai.Client(http_options={"api_version": "v1alpha"})
+    except Exception as e:
+        print(f"Failed to initialize Gemini Client: {e}")
+        client = None
 else:
-    client = genai.Client(api_key=GEMINI_API_KEY, http_options={"api_version": "v1alpha"})
+    try:
+        client = genai.Client(api_key=GEMINI_API_KEY, http_options={"api_version": "v1alpha"})
+    except Exception as e:
+        print(f"Failed to initialize Gemini Client with key: {e}")
+        client = None
 
 
 @app.post("/api/token")
 async def get_ephemeral_token(request: Request):
     """Generates an ephemeral token for the Gemini Live API."""
+    if not client:
+        return JSONResponse(status_code=500, content={"error": "Gemini Client not initialized. Check GEMINI_API_KEY environment variable."})
+        
     try:
         now = datetime.datetime.now(tz=datetime.timezone.utc)
         expire_time = now + datetime.timedelta(minutes=30)
