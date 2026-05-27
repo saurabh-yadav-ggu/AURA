@@ -132,7 +132,7 @@ try:
             print(f"Error storing memory: {e}")
             return JSONResponse(status_code=500, content={"error": str(e)})
 
-    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "public")
+    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
     if os.path.exists(frontend_dir):
         try:
             app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="static")
@@ -158,6 +158,7 @@ except Exception as fatal_error:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("api.index:app", host="0.0.0.0", port=8000)
+
 
 
 
