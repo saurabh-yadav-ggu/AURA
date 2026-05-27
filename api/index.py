@@ -151,7 +151,7 @@ try:
             print(f"Error storing memory: {e}")
             return JSONResponse(status_code=500, content={"error": str(e)})
 
-    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
+    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "public")
     if os.path.exists(frontend_dir):
         try:
             app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="static")
