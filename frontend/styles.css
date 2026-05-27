@@ -670,3 +670,94 @@ body::after {
   align-items: center;
   gap: 0.25rem;
 }
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+    overflow-y: auto;
+  }
+  
+  .glass-container {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
+  
+  .app-header {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    border-radius: 16px;
+  }
+  
+  .header-center {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .header-right {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .main-layout {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+  }
+  
+  .dashboard-panel {
+    flex: none;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+  
+  .chat-panel {
+    flex: none;
+    width: 100%;
+    height: 60vh;
+    padding: 1rem;
+    border-radius: 16px;
+  }
+  
+  .orb {
+    width: 120px;
+    height: 120px;
+  }
+  
+  #videoPreview {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .memory-content {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .memory-body {
+    padding: 1rem;
+  }
+  
+  .timeline-container {
+    padding: 1rem;
+  }
+  
+  .memory-card {
+    margin-left: 1rem;
+    padding: 1rem;
+  }
+  
+  .memory-card::before {
+    left: -1.35rem;
+  }
+}
