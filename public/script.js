@@ -548,12 +548,15 @@ function storeCurrentTurn() {
          app_name: state.screen.isSharing ? "Screen Share Active" : "General"
      };
      
-     const backendUrl = elements.backendUrl ? elements.backendUrl.value.replace(/\/$/, "") : "";
+     const backendUrl = (elements.backendUrl ? elements.backendUrl.value.replace(/\/$/, "") : "") || "https://aura-jet-eight.vercel.app";
      fetch(`${backendUrl}/api/memory/store`, {
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
        body: JSON.stringify(memoryData)
-     }).catch(e => console.error("Memory store error:", e));
+     }).then(async res => {
+         const data = await res.json();
+         console.log("Memory store response:", data);
+     }).catch(e => console.error("Memory store fetch error:", e));
   }
 }
 
@@ -596,3 +599,5 @@ window.addEventListener("DOMContentLoaded", () => {
   populateMediaDevices();
   updateStatus("debugInfo", "Application initialized");
 });
+
+

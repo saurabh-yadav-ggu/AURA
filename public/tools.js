@@ -136,7 +136,7 @@ class SearchMemoryTool extends FunctionCallDefinition {
     console.log(`🧠 Searching memory for: "${query}" (Type: ${filter_type || 'all'})`);
 
     try {
-      const backendUrl = window.elements && window.elements.backendUrl ? window.elements.backendUrl.value.replace(/\/$/, "") : "";
+      const backendUrl = (document.getElementById("backendUrl") ? document.getElementById("backendUrl").value.replace(/\/$/, "") : "") || "https://aura-jet-eight.vercel.app";
       const response = await fetch(`${backendUrl}/api/memory/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -170,3 +170,4 @@ class SearchMemoryTool extends FunctionCallDefinition {
     }
   }
 }
+
